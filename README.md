@@ -9,7 +9,7 @@
 - Saul Arturo Condori Machaca
 
 
-En mi aportacion al codigo en el modelo de "ADMINISTRACION" estoy los siguientes estilos de programacion: Programación Orientada a Objetos (POO), Modelo-Vista-Controlador (MVC) y tratamiento de errores. A continuacion detallo cómo se aplico los estilos en las diversas partes del código.
+En mi aportacion al codigo en el modelo de "ADMINISTRACION" estoy usando los siguientes estilos de programacion: Programación Orientada a Objetos (POO), Modelo-Vista-Controlador (MVC) y tratamiento de errores. A continuacion detallo cómo se aplico los estilos en las diversas partes del código.
 
 ### Programación Orientada a Objetos (POO)
 
