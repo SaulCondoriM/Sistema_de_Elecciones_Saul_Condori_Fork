@@ -56,6 +56,21 @@ class ErrorHandler {
 ```
 OCP: Las interfaces ICandidatoDB, IFechaDB y IResultadoDB permiten que el código sea extensible. Si en el futuro se desea cambiar la forma en que se manejan los candidatos, fechas o resultados, simplemente se puede crear una nueva implementación sin modificar OpcionesAdmin.
 
+```typescript
+interface ICandidatoDB {
+  guardarCandidato(candidato: Candidato): Promise<void>;
+}
+
+interface IFechaDB {
+  guardarFecha(fecha: Date): Promise<void>;
+}
+
+interface IResultadoDB {
+  obtenerResultados(): Promise<Array<Resultado>>;
+}
+
+```
+
 LSP: Al usar interfaces, nos aseguramos de que cualquier clase que implemente estas interfaces pueda ser sustituida sin problemas.
 
 ISP: Se han creado interfaces específicas para cada conjunto de operaciones, asegurando que OpcionesAdmin no dependa de métodos que no necesita.
