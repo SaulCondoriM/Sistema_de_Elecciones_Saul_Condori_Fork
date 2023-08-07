@@ -36,6 +36,8 @@ class MyClass {...}
 
 ## Principios Solid:
 
+### entities/administrador.ts
+
 SRP: Se ha separado la responsabilidad de manejo de errores en una clase ErrorHandler. Esto significa que OpcionesAdmin ya no tiene que preocuparse por cómo manejar los errores.
 
 ```typescript
