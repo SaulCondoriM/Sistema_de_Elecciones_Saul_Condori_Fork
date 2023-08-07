@@ -1,71 +1,85 @@
 import { Candidato } from '../../Candidatura/entities/Candidato.ts';
-import { Resultado } from '../../Resultados/entities/Resultado.ts'
+import { Resultado } from '../../Resultados/entities/Resultado.ts';
+
+// Interfaces para segregación y inversión de dependencias
+interface ICandidatoDB {
+  guardarCandidato(candidato: Candidato): Promise<void>;
+}
+
+interface IFechaDB {
+  guardarFecha(fecha: Date): Promise<void>;
+}
+
+interface IResultadoDB {
+  obtenerResultados(): Promise<Array<Resultado>>;
+}
+
+// Implementación de una clase que maneja errores
+class ErrorHandler {
+  handleCandidatoError(candidato: Candidato, error: any) {
+    console.error(`Hubo un error al ingresar al candidato: ${candidato.nombre}`, error);
+  }
+
+  handleFechaError(fecha: Date, error: any) {
+    console.error(`Hubo un error al asignar la fecha: ${fecha}`, error);
+  }
+
+  handleResultadosError(error: any) {
+    console.error('Hubo un error al mostrar/recopilar los resultados', error);
+  }
+}
 
 namespace Dominio.Administracion.service {
   class OpcionesAdmin {
-    private baseDeDatos: BaseDeDatos;
+    private candidatoDB: ICandidatoDB;
+    private fechaDB: IFechaDB;
+    private resultadoDB: IResultadoDB;
+    private errorHandler: ErrorHandler;
 
-    /**
-     * Default constructor
-     */
-    constructor(baseDeDatos: BaseDeDatos) {
-      this.baseDeDatos = baseDeDatos;
+    constructor(candidatoDB: ICandidatoDB, fechaDB: IFechaDB, resultadoDB: IResultadoDB, errorHandler: ErrorHandler) {
+      this.candidatoDB = candidatoDB;
+      this.fechaDB = fechaDB;
+      this.resultadoDB = resultadoDB;
+      this.errorHandler = errorHandler;
     }
 
-    /**
-     * Implement this method to handle candidate entry.
-     */
     public async ingresar_candidatos(candidatos: Array<Candidato>): Promise<void> {
-      // Guarda los candidatos en la base de datos
       for (const candidato of candidatos) {
         try {
           console.log(`Ingresando al candidato: ${candidato.nombre}`);
-          await this.baseDeDatos.guardarCandidato(candidato);
+          await this.candidatoDB.guardarCandidato(candidato);
         } catch (error) {
-          console.error(`Hubo un error al ingresar al candidato: ${candidato.nombre}`, error);
+          this.errorHandler.handleCandidatoError(candidato, error);
         }
       }
     }
 
-    /**
-     * Implement this method to assign a date.
-     */
     public async asignar_fecha(fecha: Date): Promise<void> {
-      // Asigna la fecha de las elecciones
       try {
         console.log(`Asignando fecha de elecciones: ${fecha}`);
-        await this.baseDeDatos.guardarFecha(fecha);
+        await this.fechaDB.guardarFecha(fecha);
       } catch (error) {
-        console.error(`Hubo un error al asignar la fecha: ${fecha}`, error);
+        this.errorHandler.handleFechaError(fecha, error);
       }
     }
 
-    /**
-     * Implement this method to display results.
-     */
     public async mostrar_resultados(): Promise<void> {
-      // Muestra los resultados de las elecciones
       try {
-        const resultados = await this.baseDeDatos.obtenerResultados();
+        const resultados = await this.resultadoDB.obtenerResultados();
         console.log('Resultados de las elecciones:', resultados);
       } catch (error) {
-        console.error('Hubo un error al mostrar los resultados', error);
+        this.errorHandler.handleResultadosError(error);
       }
     }
 
-    /**
-     * Implement this method to collect results.
-     */
     public async recopilar_resultados(): Promise<Array<Resultado>> {
-      // Recoge los resultados de las elecciones
       try {
         console.log('Recopilando los resultados de las elecciones');
-        const resultados = await this.baseDeDatos.obtenerResultados();
-      
-        return resultados; // devuelve los resultados
+        const resultados = await this.resultadoDB.obtenerResultados();
+        return resultados;
       } catch (error) {
-        console.error('Hubo un error al recopilar los resultados', error);
-        return []; // devuelve un array vacío en caso de error
+        this.errorHandler.handleResultadosError(error);
+        return [];
       }
     }
   }
