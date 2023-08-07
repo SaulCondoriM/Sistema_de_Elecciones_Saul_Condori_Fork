@@ -38,7 +38,19 @@ class MyClass {...}
 
 ### entities/administrador.ts
 
-SRP: Se ha separado la responsabilidad de manejo de errores en una clase ErrorHandler. Esto significa que OpcionesAdmin ya no tiene que preocuparse por cómo manejar los errores.
+- SRP (Principio de Responsabilidad Única): La clase ya cumple con este principio, ya que tiene una única responsabilidad: representar la información de un administrador.
+
+- OCP (Principio Abierto/Cerrado): La clase está abierta para extensión (a través de métodos adicionales o clases derivadas) y cerrada para modificación.
+
+- LSP (Principio de Sustitución de Liskov): Asegurémonos de que la clase Administrador pueda ser sustituida por su clase base Usuario. Esto implica que la clase Usuario debe estar diseñada de manera que cualquier clase derivada, como Administrador, pueda extenderla sin romper su funcionalidad.
+
+- ISP (Principio de Segregación de Interfaces): Si hay métodos en la clase Usuario que no son relevantes para Administrador, podríamos considerar la creación de interfaces más específicas.
+
+- DIP (Principio de Inversión de Dependencias): La clase Administrador no parece depender de detalles de implementación de bajo nivel, por lo que ya cumple con este principio.
+
+### service/Opciones_Admin.ts
+
+- SRP: Se ha separado la responsabilidad de manejo de errores en una clase ErrorHandler. Esto significa que OpcionesAdmin ya no tiene que preocuparse por cómo manejar los errores.
 
 ```typescript
 class ErrorHandler {
@@ -56,7 +68,7 @@ class ErrorHandler {
 }
 
 ```
-OCP: Las interfaces ICandidatoDB, IFechaDB y IResultadoDB permiten que el código sea extensible. Si en el futuro se desea cambiar la forma en que se manejan los candidatos, fechas o resultados, simplemente se puede crear una nueva implementación sin modificar OpcionesAdmin.
+- OCP: Las interfaces ICandidatoDB, IFechaDB y IResultadoDB permiten que el código sea extensible. Si en el futuro se desea cambiar la forma en que se manejan los candidatos, fechas o resultados, simplemente se puede crear una nueva implementación sin modificar OpcionesAdmin.
 
 ```typescript
 interface ICandidatoDB {
@@ -73,8 +85,12 @@ interface IResultadoDB {
 
 ```
 
-LSP: Al usar interfaces, nos aseguramos de que cualquier clase que implemente estas interfaces pueda ser sustituida sin problemas.
+- LSP: Al usar interfaces, nos aseguramos de que cualquier clase que implemente estas interfaces pueda ser sustituida sin problemas.
 
-ISP: Se han creado interfaces específicas para cada conjunto de operaciones, asegurando que OpcionesAdmin no dependa de métodos que no necesita.
+- ISP: Se han creado interfaces específicas para cada conjunto de operaciones, asegurando que OpcionesAdmin no dependa de métodos que no necesita.
 
-DIP: OpcionesAdmin ya no depende de una implementación concreta de la base de datos. En su lugar, depende de abstracciones (interfaces), lo que hace que el código sea más flexible y desacoplado.
+- DIP: OpcionesAdmin ya no depende de una implementación concreta de la base de datos. En su lugar, depende de abstracciones (interfaces), lo que hace que el código sea más flexible y desacoplado.
+
+### vos/repository.ts
+
+
