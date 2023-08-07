@@ -26,11 +26,38 @@ Para asegurar la robustez y la fiabilidad del sistema, implementé el tratamient
 ### Code Smell
 
 Por el momento, con ayuda de la extension SonarLint, pude identificar algunos problemas que me los marcaba com Code Smell, como por ejemplo, al momento de nombrar clases, teniendo mi clase la siguiente estructura:
-```
+```typescript
 class my_class {...}
 ```
 Recomendando a que la cambie por la siguiente estructura:
-```
+```typescript
 class MyClass {...}
 ```
 
+## Principios Solid:
+
+SRP: Se ha separado la responsabilidad de manejo de errores en una clase ErrorHandler. Esto significa que OpcionesAdmin ya no tiene que preocuparse por cómo manejar los errores.
+
+```typescript
+class ErrorHandler {
+  handleCandidatoError(candidato: Candidato, error: any) {
+    console.error(`Hubo un error al ingresar al candidato: ${candidato.nombre}`, error);
+  }
+
+  handleFechaError(fecha: Date, error: any) {
+    console.error(`Hubo un error al asignar la fecha: ${fecha}`, error);
+  }
+
+  handleResultadosError(error: any) {
+    console.error('Hubo un error al mostrar/recopilar los resultados', error);
+  }
+}
+
+```
+OCP: Las interfaces ICandidatoDB, IFechaDB y IResultadoDB permiten que el código sea extensible. Si en el futuro se desea cambiar la forma en que se manejan los candidatos, fechas o resultados, simplemente se puede crear una nueva implementación sin modificar OpcionesAdmin.
+
+LSP: Al usar interfaces, nos aseguramos de que cualquier clase que implemente estas interfaces pueda ser sustituida sin problemas.
+
+ISP: Se han creado interfaces específicas para cada conjunto de operaciones, asegurando que OpcionesAdmin no dependa de métodos que no necesita.
+
+DIP: OpcionesAdmin ya no depende de una implementación concreta de la base de datos. En su lugar, depende de abstracciones (interfaces), lo que hace que el código sea más flexible y desacoplado.
